@@ -1,10 +1,14 @@
+import { DomainEvent, ICreateDomainEvent } from './domain-event';
+
 import { schemaValidator } from '@packages/schema-validator';
 import { v4 as uuid } from 'uuid';
+
 export abstract class Entity<T> {
   private readonly _id: string;
   private readonly _created: string;
   private _updated: string;
   protected props: T;
+  private _domainEvents: DomainEvent[] = [];
 
   constructor(props: T, id?: string, created?: string, updated?: string) {
     // set default values on creation
@@ -17,6 +21,32 @@ export abstract class Entity<T> {
       created: this.created,
       updated: this.updated,
     };
+  }
+
+  public addDomainEvent(eventDetails: ICreateDomainEvent): void {
+    // if we supply an event schema then validate before pushing the domain event
+    // https://leejamesgilmore.medium.com/amazon-eventbridge-schema-validation-5b6c2c5ce3b3
+    if (eventDetails.eventSchema) {
+      schemaValidator(eventDetails.eventSchema, eventDetails.event);
+    }
+
+    const event: DomainEvent = {
+      source: eventDetails.source,
+      eventName: eventDetails.eventName,
+      event: eventDetails.event,
+      eventVersion: eventDetails.eventVersion,
+      eventDateTime: this.getISOString(),
+    };
+
+    this._domainEvents.push(event);
+  }
+
+  public clearDomainEvents(): void {
+    this._domainEvents = [];
+  }
+
+  public get domainEvents(): DomainEvent[] {
+    return this._domainEvents;
   }
 
   public get id(): string {
@@ -39,7 +69,7 @@ export abstract class Entity<T> {
     schemaValidator(schema, this.props);
   }
 
-  private getISOString(): string {
+  protected getISOString(): string {
     return new Date().toISOString();
   }
 }

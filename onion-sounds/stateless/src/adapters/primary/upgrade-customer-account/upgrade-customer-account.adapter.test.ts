@@ -1,16 +1,16 @@
 import * as upgradeCustomerAccountUseCase from '@use-cases/upgrade-customer-account/upgrade-customer-account';
 
 import {
-  CustomerAccountProps,
   PaymentStatus,
   SubscriptionType,
-} from '@models/types';
+} from '@models/customer-account-types';
 
 import { APIGatewayProxyEvent } from 'aws-lambda';
+import { CustomerAccountDto } from '@dto/customer-account';
 import { upgradeCustomerAccountAdapter } from '@adapters/primary/upgrade-customer-account/upgrade-customer-account.adapter';
 
 let event: Partial<APIGatewayProxyEvent>;
-let customerAccount: CustomerAccountProps;
+let customerAccount: CustomerAccountDto;
 
 describe('upgrade-customer-account-handler', () => {
   afterAll(() => {
@@ -26,6 +26,15 @@ describe('upgrade-customer-account-handler', () => {
       paymentStatus: PaymentStatus.Valid,
       created: 'created',
       updated: 'updated',
+      playlists: [],
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
 
     jest
@@ -41,12 +50,28 @@ describe('upgrade-customer-account-handler', () => {
 
   it('should return the correct response on success', async () => {
     // act & assert
+    await expect(upgradeCustomerAccountAdapter(event as any)).resolves
+      .toMatchInlineSnapshot(`
+Object {
+  "body": "{\\"id\\":\\"111\\",\\"firstName\\":\\"Gilmore\\",\\"surname\\":\\"Lee\\",\\"subscriptionType\\":\\"Upgraded\\",\\"paymentStatus\\":\\"Valid\\",\\"created\\":\\"created\\",\\"updated\\":\\"updated\\",\\"playlists\\":[],\\"customerAddress\\":{\\"addressLineOne\\":\\"line one\\",\\"addressLineTwo\\":\\"line two\\",\\"addressLineThree\\":\\"line three\\",\\"addressLineFour\\":\\"line four\\",\\"addressLineFive\\":\\"line five\\",\\"postCode\\":\\"ne11bb\\"}}",
+  "statusCode": 200,
+}
+`);
+  });
+
+  it('should throw an error if no path parameters', async () => {
+    // arrange
+    event = {
+      pathParameters: null,
+    };
+
+    // act & assert
     await expect(
 upgradeCustomerAccountAdapter((event as any))).
 resolves.toMatchInlineSnapshot(`
 Object {
-  "body": "{\\"id\\":\\"111\\",\\"firstName\\":\\"Gilmore\\",\\"surname\\":\\"Lee\\",\\"subscriptionType\\":\\"Upgraded\\",\\"paymentStatus\\":\\"Valid\\",\\"created\\":\\"created\\",\\"updated\\":\\"updated\\"}",
-  "statusCode": 200,
+  "body": "\\"no id in the path parameters of the event\\"",
+  "statusCode": 400,
 }
 `);
   });
@@ -56,9 +81,8 @@ Object {
     event = {} as any;
 
     // act & assert
-    await expect(
-upgradeCustomerAccountAdapter((event as any))).
-resolves.toMatchInlineSnapshot(`
+    await expect(upgradeCustomerAccountAdapter(event as any)).resolves
+      .toMatchInlineSnapshot(`
 Object {
   "body": "\\"no id in the path parameters of the event\\"",
   "statusCode": 400,

@@ -1,15 +1,15 @@
 import * as retrieveCustomerAccount from '@repositories/retrieve-customer-account-repository/retrieve-customer-account-repository';
 
 import {
-  CustomerAccountProps,
   PaymentStatus,
   SubscriptionType,
-} from '@models/types';
+} from '@models/customer-account-types';
 
 import { CustomerAccount } from '@domain/customer-account';
+import { CustomerAccountDto } from '@dto/customer-account';
 import { retrieveCustomerAccountUseCase } from '@use-cases/retrieve-customer-account/retrieve-customer-account';
 
-let customerAccountDto: CustomerAccountProps;
+let customerAccountDto: CustomerAccountDto;
 
 describe('retrieve-customer-use-case', () => {
   beforeAll(() => {
@@ -29,6 +29,15 @@ describe('retrieve-customer-use-case', () => {
       paymentStatus: PaymentStatus.Valid,
       created: 'created',
       updated: 'updated',
+      playlists: [],
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
 
     const createdAccount: CustomerAccount =
@@ -48,9 +57,18 @@ describe('retrieve-customer-use-case', () => {
     expect(response).toMatchInlineSnapshot(`
 Object {
   "created": "2022-01-01T00:00:00.000Z",
+  "customerAddress": Object {
+    "addressLineFive": "line five",
+    "addressLineFour": "line four",
+    "addressLineOne": "line one",
+    "addressLineThree": "line three",
+    "addressLineTwo": "line two",
+    "postCode": "ne11bb",
+  },
   "firstName": "Gilmore",
   "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
   "paymentStatus": "Valid",
+  "playlists": Array [],
   "subscriptionType": "Basic",
   "surname": "Lee",
   "updated": "2022-01-01T00:00:00.000Z",

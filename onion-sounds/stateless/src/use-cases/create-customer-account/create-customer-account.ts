@@ -1,20 +1,20 @@
 import {
-  CreateCustomerAccountProps,
-  CustomerAccountProps,
-} from '@models/types';
-import { eventName, eventSource } from '@events/customer-account-created';
+  CustomerAccountDto,
+  NewCustomerAccountDto,
+} from '@dto/customer-account';
 
 import { CustomerAccount } from '@domain/customer-account';
 import { createCustomerAccount } from '@repositories/create-customer-account-repository';
-import { publishEvent } from '@repositories/publish-event-recipient';
+import { logger } from '@packages/logger';
+import { publishDomainEvents } from '@repositories/publish-event-recipient';
 
 // takes a dto and calls the domain entities (returning a dto to the primary adapter)
 // adapter --> (use case) --> domain & repositories
 
 /**
  * Create a new Customer Account
- * Input: CreateCustomerAccountProps
- * Output: CustomerAccountProps
+ * Input: NewCustomerAccountDto
+ * Output: CustomerAccountDto
  *
  * Primary course:
  *
@@ -23,14 +23,14 @@ import { publishEvent } from '@repositories/publish-event-recipient';
  *  3. Publish a CustomerAccountCreated event.
  */
 export async function createCustomerAccountUseCase(
-  account: CreateCustomerAccountProps
-): Promise<CustomerAccountProps> {
-  const newCustomer = CustomerAccount.createAccount(account);
+  account: NewCustomerAccountDto
+): Promise<CustomerAccountDto> {
+  const newCustomer: CustomerAccount = CustomerAccount.createAccount(account);
 
-  const createdAccount = await createCustomerAccount(newCustomer);
+  await createCustomerAccount(newCustomer);
+  logger.info(`customer account created for ${newCustomer.id}`);
 
-  // we would typically validate the events: https://leejamesgilmore.medium.com/amazon-eventbridge-schema-validation-5b6c2c5ce3b3
-  await publishEvent(createdAccount, eventName, eventSource);
+  await publishDomainEvents(newCustomer.retrieveDomainEvents());
 
-  return createdAccount.toDto();
+  return newCustomer.toDto();
 }

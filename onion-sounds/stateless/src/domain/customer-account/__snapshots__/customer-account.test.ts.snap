@@ -1,15 +1,216 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`customer-account add domain event should return the domain events on the object 1`] = `
+Array [
+  Object {
+    "event": Object {
+      "created": "2022-01-01T00:00:00.000Z",
+      "customerAddress": Object {
+        "addressLineFive": "line five",
+        "addressLineFour": "line four",
+        "addressLineOne": "line one",
+        "addressLineThree": "line three",
+        "addressLineTwo": "line two",
+        "postCode": "ne11bb",
+      },
+      "firstName": "Lee",
+      "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+      "paymentStatus": "Valid",
+      "playlists": Array [],
+      "subscriptionType": "Basic",
+      "surname": "Gilmore",
+      "updated": "2022-01-01T00:00:00.000Z",
+    },
+    "eventDateTime": "2022-01-01T00:00:00.000Z",
+    "eventName": "CustomerAccountCreated",
+    "eventVersion": "1",
+    "source": "com.customer-account-onion",
+  },
+  Object {
+    "event": Object {
+      "created": "2022-01-01T00:00:00.000Z",
+      "customerAddress": Object {
+        "addressLineFive": "line five",
+        "addressLineFour": "line four",
+        "addressLineOne": "line one",
+        "addressLineThree": "line three",
+        "addressLineTwo": "line two",
+        "postCode": "ne11bb",
+      },
+      "firstName": "Lee",
+      "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+      "paymentStatus": "Valid",
+      "playlists": Array [
+        Object {
+          "created": "2022-01-01T00:00:00.000Z",
+          "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+          "playlistName": "playlistone",
+          "songIds": Array [],
+          "updated": "2022-01-01T00:00:00.000Z",
+        },
+      ],
+      "subscriptionType": "Basic",
+      "surname": "Gilmore",
+      "updated": "2022-01-01T00:00:00.000Z",
+    },
+    "eventDateTime": "2022-01-01T00:00:00.000Z",
+    "eventName": "CustomerAccountUpdated",
+    "eventVersion": "1",
+    "source": "com.customer-account-onion",
+  },
+  Object {
+    "event": Object {
+      "created": "2022-01-01T00:00:00.000Z",
+      "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+      "playlistName": "playlistone",
+      "songIds": Array [],
+      "updated": "2022-01-01T00:00:00.000Z",
+    },
+    "eventDateTime": "2022-01-01T00:00:00.000Z",
+    "eventName": "CustomerPlaylistCreated",
+    "eventVersion": "1",
+    "source": "com.customer-account-onion",
+  },
+]
+`;
+
 exports[`customer-account create account should create the new account successfully with a valid customer 1`] = `
 CustomerAccount {
   "_created": "2022-01-01T00:00:00.000Z",
+  "_domainEvents": Array [
+    Object {
+      "event": Object {
+        "created": "2022-01-01T00:00:00.000Z",
+        "customerAddress": Object {
+          "addressLineFive": "line five",
+          "addressLineFour": "line four",
+          "addressLineOne": "line one",
+          "addressLineThree": "line three",
+          "addressLineTwo": "line two",
+          "postCode": "ne11bb",
+        },
+        "firstName": "Lee",
+        "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+        "paymentStatus": "Valid",
+        "playlists": Array [],
+        "subscriptionType": "Basic",
+        "surname": "Gilmore",
+        "updated": "2022-01-01T00:00:00.000Z",
+      },
+      "eventDateTime": "2022-01-01T00:00:00.000Z",
+      "eventName": "CustomerAccountCreated",
+      "eventVersion": "1",
+      "source": "com.customer-account-onion",
+    },
+  ],
   "_id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
   "_updated": "2022-01-01T00:00:00.000Z",
   "props": Object {
     "created": "2022-01-01T00:00:00.000Z",
+    "customerAddress": CustomerAddress {
+      "props": Object {
+        "addressLineFive": "line five",
+        "addressLineFour": "line four",
+        "addressLineOne": "line one",
+        "addressLineThree": "line three",
+        "addressLineTwo": "line two",
+        "postCode": "ne11bb",
+      },
+    },
     "firstName": "Lee",
     "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
     "paymentStatus": "Valid",
+    "playlists": Array [],
+    "subscriptionType": "Basic",
+    "surname": "Gilmore",
+    "updated": "2022-01-01T00:00:00.000Z",
+  },
+}
+`;
+
+exports[`customer-account create playlist should add the playlist successfully 1`] = `
+CustomerAccount {
+  "_created": "2022-01-01T00:00:00.000Z",
+  "_domainEvents": Array [
+    Object {
+      "event": Object {
+        "created": "2022-01-01T00:00:00.000Z",
+        "customerAddress": Object {
+          "addressLineFive": "line five",
+          "addressLineFour": "line four",
+          "addressLineOne": "line one",
+          "addressLineThree": "line three",
+          "addressLineTwo": "line two",
+          "postCode": "ne11bb",
+        },
+        "firstName": "Lee",
+        "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+        "paymentStatus": "Valid",
+        "playlists": Array [
+          Object {
+            "created": "2022-01-01T00:00:00.000Z",
+            "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+            "playlistName": "newplaylist",
+            "songIds": Array [],
+            "updated": "2022-01-01T00:00:00.000Z",
+          },
+        ],
+        "subscriptionType": "Basic",
+        "surname": "Gilmore",
+        "updated": "2022-01-01T00:00:00.000Z",
+      },
+      "eventDateTime": "2022-01-01T00:00:00.000Z",
+      "eventName": "CustomerAccountUpdated",
+      "eventVersion": "1",
+      "source": "com.customer-account-onion",
+    },
+  ],
+  "_id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+  "_updated": "2022-01-01T00:00:00.000Z",
+  "props": Object {
+    "created": "2022-01-01T00:00:00.000Z",
+    "customerAddress": CustomerAddress {
+      "props": Object {
+        "addressLineFive": "line five",
+        "addressLineFour": "line four",
+        "addressLineOne": "line one",
+        "addressLineThree": "line three",
+        "addressLineTwo": "line two",
+        "postCode": "ne11bb",
+      },
+    },
+    "firstName": "Lee",
+    "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+    "paymentStatus": "Valid",
+    "playlists": Array [
+      CustomerPlaylist {
+        "_created": "2022-01-01T00:00:00.000Z",
+        "_domainEvents": Array [
+          Object {
+            "event": Object {
+              "created": "2022-01-01T00:00:00.000Z",
+              "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+              "playlistName": "newplaylist",
+              "songIds": Array [],
+              "updated": "2022-01-01T00:00:00.000Z",
+            },
+            "eventDateTime": "2022-01-01T00:00:00.000Z",
+            "eventName": "CustomerPlaylistCreated",
+            "eventVersion": "1",
+            "source": "com.customer-account-onion",
+          },
+        ],
+        "_id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+        "_updated": "2022-01-01T00:00:00.000Z",
+        "props": Object {
+          "created": "2022-01-01T00:00:00.000Z",
+          "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+          "playlistName": "newplaylist",
+          "songIds": Array [],
+          "updated": "2022-01-01T00:00:00.000Z",
+        },
+      },
+    ],
     "subscriptionType": "Basic",
     "surname": "Gilmore",
     "updated": "2022-01-01T00:00:00.000Z",
@@ -20,13 +221,39 @@ CustomerAccount {
 exports[`customer-account toDomain should create a domain object based on a dto 1`] = `
 CustomerAccount {
   "_created": "2022-01-01T00:00:00.000Z",
+  "_domainEvents": Array [],
   "_id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
   "_updated": "2022-01-01T00:00:00.000Z",
   "props": Object {
     "created": "2022-01-01T00:00:00.000Z",
+    "customerAddress": CustomerAddress {
+      "props": Object {
+        "addressLineFive": "line five",
+        "addressLineFour": "line four",
+        "addressLineOne": "line one",
+        "addressLineThree": "line three",
+        "addressLineTwo": "line two",
+        "postCode": "ne11bb",
+      },
+    },
     "firstName": "Lee",
     "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
     "paymentStatus": "Valid",
+    "playlists": Array [
+      CustomerPlaylist {
+        "_created": "2022-01-01T00:00:00.000Z",
+        "_domainEvents": Array [],
+        "_id": "a49e49ad-8f88-448f-8a15-41d560ad6d70",
+        "_updated": "2022-01-01T00:00:00.000Z",
+        "props": Object {
+          "created": "2022-01-01T00:00:00.000Z",
+          "id": "a49e49ad-8f88-448f-8a15-41d560ad6d70",
+          "playlistName": "testplaylist",
+          "songIds": Array [],
+          "updated": "2022-01-01T00:00:00.000Z",
+        },
+      },
+    ],
     "subscriptionType": "Upgraded",
     "surname": "Gilmore",
     "updated": "2022-01-01T00:00:00.000Z",
@@ -37,9 +264,18 @@ CustomerAccount {
 exports[`customer-account toDto should create the correct dto 1`] = `
 Object {
   "created": "2022-01-01T00:00:00.000Z",
+  "customerAddress": Object {
+    "addressLineFive": "line five",
+    "addressLineFour": "line four",
+    "addressLineOne": "line one",
+    "addressLineThree": "line three",
+    "addressLineTwo": "line two",
+    "postCode": "ne11bb",
+  },
   "firstName": "Lee",
   "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
   "paymentStatus": "Valid",
+  "playlists": Array [],
   "subscriptionType": "Basic",
   "surname": "Gilmore",
   "updated": "2022-01-01T00:00:00.000Z",
@@ -49,13 +285,50 @@ Object {
 exports[`customer-account upgrade account should upgrade an existing customer by id if payment status is valid 1`] = `
 CustomerAccount {
   "_created": "2022-01-01T00:00:00.000Z",
+  "_domainEvents": Array [
+    Object {
+      "event": Object {
+        "created": "2022-01-01T00:00:00.000Z",
+        "customerAddress": Object {
+          "addressLineFive": "line five",
+          "addressLineFour": "line four",
+          "addressLineOne": "line one",
+          "addressLineThree": "line three",
+          "addressLineTwo": "line two",
+          "postCode": "ne11bb",
+        },
+        "firstName": "Lee",
+        "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+        "paymentStatus": "Valid",
+        "playlists": Array [],
+        "subscriptionType": "Upgraded",
+        "surname": "Gilmore",
+        "updated": "2022-01-01T00:00:00.000Z",
+      },
+      "eventDateTime": "2022-01-01T00:00:00.000Z",
+      "eventName": "CustomerAccountUpgraded",
+      "eventVersion": "1",
+      "source": "com.customer-account-onion",
+    },
+  ],
   "_id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
   "_updated": "2022-01-01T00:00:00.000Z",
   "props": Object {
     "created": "2022-01-01T00:00:00.000Z",
+    "customerAddress": CustomerAddress {
+      "props": Object {
+        "addressLineFive": "line five",
+        "addressLineFour": "line four",
+        "addressLineOne": "line one",
+        "addressLineThree": "line three",
+        "addressLineTwo": "line two",
+        "postCode": "ne11bb",
+      },
+    },
     "firstName": "Lee",
     "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
     "paymentStatus": "Valid",
+    "playlists": Array [],
     "subscriptionType": "Upgraded",
     "surname": "Gilmore",
     "updated": "2022-01-01T00:00:00.000Z",

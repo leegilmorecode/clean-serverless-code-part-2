@@ -1,13 +1,9 @@
-import * as publishCustomerAccountEvent from '@adapters/secondary/event-adapter/event-adapter';
-
-import {
-  CustomerAccountProps,
-  PaymentStatus,
-  SubscriptionType,
-} from '@models/types';
+import * as publishEvent from '@adapters/secondary/event-adapter/event-adapter';
 
 import { CustomerAccount } from '@domain/customer-account';
-import { publishEvent } from '@repositories/publish-event-recipient/publish-event-recipient';
+import { CustomerAddressProps } from '@models/customer-address-types';
+import { NewCustomerAccountProps } from '@models/customer-account-types';
+import { publishDomainEvents } from '@repositories/publish-event-recipient/publish-event-recipient';
 
 describe('publish-event-repository', () => {
   afterAll(() => {
@@ -16,29 +12,23 @@ describe('publish-event-repository', () => {
 
   it('should return void on success', async () => {
     // arrange
-    const customerAccountProps: CustomerAccountProps = {
-      id: '111',
-      firstName: 'Gilmore',
-      surname: 'Lee',
-      subscriptionType: SubscriptionType.Basic,
-      paymentStatus: PaymentStatus.Valid,
-      created: 'created',
-      updated: 'updated',
+    const customerAddress: CustomerAddressProps = {
+      addressLineOne: 'line one',
+      postCode: 'ne11bb',
+    };
+    const newCustomer: NewCustomerAccountProps = {
+      firstName: 'Lee',
+      surname: 'Gilmore',
+      customerAddress,
     };
 
     const customer: CustomerAccount =
-      CustomerAccount.createAccount(customerAccountProps);
+      CustomerAccount.createAccount(newCustomer);
 
-    jest
-      .spyOn(publishCustomerAccountEvent, 'publishCustomerAccountEvent')
-      .mockReturnThis();
+    jest.spyOn(publishEvent, 'publishEvent').mockReturnThis();
 
     await expect(
-      publishEvent(
-        customer,
-        'CustomerAccountCreated',
-        'com.customer-account-onion'
-      )
+      publishDomainEvents(customer.retrieveDomainEvents())
     ).resolves.toBeUndefined();
   });
 });

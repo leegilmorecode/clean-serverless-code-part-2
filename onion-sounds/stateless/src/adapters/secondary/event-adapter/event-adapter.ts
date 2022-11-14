@@ -1,22 +1,43 @@
 import * as AWS from 'aws-sdk';
 
-import { CustomerAccountProps } from '@models/types';
 import { PutEventsRequestEntry } from 'aws-sdk/clients/eventbridge';
 import { config } from '@config/config';
+import { logger } from '@packages/logger';
+
+class NoEventBodyError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'NoEventBodyError';
+  }
+}
 
 const eventBridge = new AWS.EventBridge();
 
 // this is a secondary adapter which will publish the event to eventbridge
 // domain --> use case --> (adapter)
-export async function publishCustomerAccountEvent(
-  customerAccount: CustomerAccountProps,
+export async function publishEvent(
+  event: Record<string, any>,
   detailType: string,
-  source: string
+  source: string,
+  eventVersion: string,
+  eventDateTime: string
 ): Promise<void> {
   const eventBus = config.get('eventBus');
 
+  if (Object.keys(event).length === 0) {
+    throw new NoEventBodyError('There is no body on the event');
+  }
+
   const createEvent: PutEventsRequestEntry = {
-    Detail: JSON.stringify({ ...customerAccount }),
+    Detail: JSON.stringify({
+      metadata: {
+        eventDateTime: eventDateTime,
+        eventVersion: eventVersion,
+      },
+      data: {
+        ...event,
+      },
+    }),
     DetailType: detailType,
     EventBusName: eventBus,
     Source: source,
@@ -27,4 +48,8 @@ export async function publishCustomerAccountEvent(
   };
 
   await eventBridge.putEvents(subscriptionEvent).promise();
+
+  logger.info(
+    `event ${detailType} published for ${event.id} to bus ${eventBus} with source ${source}`
+  );
 }

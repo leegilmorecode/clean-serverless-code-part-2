@@ -7,6 +7,14 @@ describe('create-customer-schema', () => {
     const payload = {
       firstName: 'Lee',
       surname: 'Gilmore',
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
     // act / assert
     expect(() => schemaValidator(schema, payload)).not.toThrow();
@@ -17,25 +25,37 @@ describe('create-customer-schema', () => {
     const payload = {
       firstName: null, // invalid
       surname: 'Gilmore',
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
     // act / assert
     expect(() =>
-      schemaValidator(schema, payload)
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"[{\\"instancePath\\":\\"/firstName\\",\\"schemaPath\\":\\"#/properties/firstName/type\\",\\"keyword\\":\\"type\\",\\"params\\":{\\"type\\":\\"string\\"},\\"message\\":\\"must be string\\"}]"`
-    );
+schemaValidator(schema, payload)).
+toThrowErrorMatchingInlineSnapshot(`"[{\\"instancePath\\":\\"/firstName\\",\\"schemaPath\\":\\"#/properties/firstName/type\\",\\"keyword\\":\\"type\\",\\"params\\":{\\"type\\":\\"string\\"},\\"message\\":\\"must be string\\"}]"`);
   });
 
   it('should not validate if the firstName is invalid', () => {
     const payload = {
       firstName: '±', // invalid
       surname: null,
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
     expect(() =>
-      schemaValidator(schema, payload)
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"[{\\"instancePath\\":\\"/firstName\\",\\"schemaPath\\":\\"#/properties/firstName/pattern\\",\\"keyword\\":\\"pattern\\",\\"params\\":{\\"pattern\\":\\"^[a-zA-Z]+$\\"},\\"message\\":\\"must match pattern \\\\\\"^[a-zA-Z]+$\\\\\\"\\"},{\\"instancePath\\":\\"/surname\\",\\"schemaPath\\":\\"#/properties/surname/type\\",\\"keyword\\":\\"type\\",\\"params\\":{\\"type\\":\\"string\\"},\\"message\\":\\"must be string\\"}]"`
-    );
+schemaValidator(schema, payload)).
+toThrowErrorMatchingInlineSnapshot(`"[{\\"instancePath\\":\\"/firstName\\",\\"schemaPath\\":\\"#/properties/firstName/pattern\\",\\"keyword\\":\\"pattern\\",\\"params\\":{\\"pattern\\":\\"^[a-zA-Z]+$\\"},\\"message\\":\\"must match pattern \\\\\\"^[a-zA-Z]+$\\\\\\"\\"},{\\"instancePath\\":\\"/surname\\",\\"schemaPath\\":\\"#/properties/surname/type\\",\\"keyword\\":\\"type\\",\\"params\\":{\\"type\\":\\"string\\"},\\"message\\":\\"must be string\\"}]"`);
   });
 
   it('should not validate if the surname is null', () => {
@@ -43,13 +63,19 @@ describe('create-customer-schema', () => {
     const payload = {
       firstName: 'Lee',
       surname: null, // invalid
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
     // act / assert
     expect(() =>
-      schemaValidator(schema, payload)
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"[{\\"instancePath\\":\\"/surname\\",\\"schemaPath\\":\\"#/properties/surname/type\\",\\"keyword\\":\\"type\\",\\"params\\":{\\"type\\":\\"string\\"},\\"message\\":\\"must be string\\"}]"`
-    );
+schemaValidator(schema, payload)).
+toThrowErrorMatchingInlineSnapshot(`"[{\\"instancePath\\":\\"/surname\\",\\"schemaPath\\":\\"#/properties/surname/type\\",\\"keyword\\":\\"type\\",\\"params\\":{\\"type\\":\\"string\\"},\\"message\\":\\"must be string\\"}]"`);
   });
 
   it('should not validate if the firstName is invalid', () => {
@@ -57,12 +83,18 @@ describe('create-customer-schema', () => {
     const payload = {
       firstName: 'Lee',
       surname: '±', // invalid
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
     // act / assert
     expect(() =>
-      schemaValidator(schema, payload)
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"[{\\"instancePath\\":\\"/surname\\",\\"schemaPath\\":\\"#/properties/surname/pattern\\",\\"keyword\\":\\"pattern\\",\\"params\\":{\\"pattern\\":\\"^[a-zA-Z]+$\\"},\\"message\\":\\"must match pattern \\\\\\"^[a-zA-Z]+$\\\\\\"\\"}]"`
-    );
+schemaValidator(schema, payload)).
+toThrowErrorMatchingInlineSnapshot(`"[{\\"instancePath\\":\\"/surname\\",\\"schemaPath\\":\\"#/properties/surname/pattern\\",\\"keyword\\":\\"pattern\\",\\"params\\":{\\"pattern\\":\\"^[a-zA-Z]+$\\"},\\"message\\":\\"must match pattern \\\\\\"^[a-zA-Z]+$\\\\\\"\\"}]"`);
   });
 });

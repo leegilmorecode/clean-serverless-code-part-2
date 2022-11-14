@@ -1,4 +1,5 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { logger } from '@packages/logger';
 
 // we would typically use middy - but to keep this simple to read
 // without mutliple additional packages lets build outselves
@@ -10,12 +11,13 @@ export function errorHandler(error: Error | unknown): APIGatewayProxyResult {
 
   if (error instanceof Error) {
     switch (error.name) {
-      case 'ValidationError':
-        errorMessage = error.message;
-        statusCode = 400;
-        break;
       case 'PaymentInvalidError':
-        errorMessage = 'The payment is invalid';
+      case 'SubscriptionAlreadyUpgradedError':
+      case 'ValidationError':
+      case 'MaxNumberOfPlaylistsError':
+      case 'MaxPlaylistSizeError':
+      case 'PlaylistNotFoundError':
+        errorMessage = error.message;
         statusCode = 400;
         break;
       default:
@@ -27,6 +29,8 @@ export function errorHandler(error: Error | unknown): APIGatewayProxyResult {
     errorMessage = 'An error has occurred';
     statusCode = 500;
   }
+
+  logger.error(errorMessage);
 
   return {
     statusCode: statusCode,

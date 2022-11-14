@@ -1,10 +1,21 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import {
+  MetricUnits,
+  Metrics,
+  logMetrics,
+} from '@aws-lambda-powertools/metrics';
+import { Tracer, captureLambdaHandler } from '@aws-lambda-powertools/tracer';
 
-import { CustomerAccountProps } from '@models/types';
+import { CustomerAccountDto } from '@dto/customer-account';
 import { ValidationError } from '@errors/validation-error';
 import { errorHandler } from '@packages/apigw-error-handler';
+import { injectLambdaContext } from '@aws-lambda-powertools/logger';
+import { logger } from '@packages/logger';
+import middy from '@middy/core';
 import { upgradeCustomerAccountUseCase } from '@use-cases/upgrade-customer-account';
-import { v4 as uuid } from 'uuid';
+
+const tracer = new Tracer();
+const metrics = new Metrics();
 
 // adapts a proxy event (infra) into a dto for the use case
 // (adapter) --> use case --> domain
@@ -12,25 +23,26 @@ export const upgradeCustomerAccountAdapter = async ({
   pathParameters,
 }: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
-    const correlationId = uuid();
-    const method = 'upgrade-customer-account.handler';
-    const prefix = `${correlationId} - ${method}`;
-
     if (!pathParameters || !pathParameters?.id)
       throw new ValidationError('no id in the path parameters of the event');
 
     const { id } = pathParameters;
 
-    console.log(`${prefix} - customer account id: ${id}`);
+    logger.info(`customer account id: ${id}`);
 
-    const customerAccount: CustomerAccountProps =
+    const customerAccount: CustomerAccountDto =
       await upgradeCustomerAccountUseCase(id);
 
-    console.log(
-      `${prefix} - upgraded customer account: ${JSON.stringify(
-        customerAccount
-      )}`
+    logger.info(
+      `upgraded customer account: ${JSON.stringify(customerAccount)}`
     );
+
+    metrics.addMetric(
+      'SuccessfulCustomerAccountUpgraded',
+      MetricUnits.Count,
+      1
+    );
+    metrics.addMetadata('CustomerAccountId', id);
 
     return {
       statusCode: 200,
@@ -40,3 +52,8 @@ export const upgradeCustomerAccountAdapter = async ({
     return errorHandler(error);
   }
 };
+
+export const handler = middy(upgradeCustomerAccountAdapter)
+  .use(injectLambdaContext(logger))
+  .use(captureLambdaHandler(tracer))
+  .use(logMetrics(metrics));

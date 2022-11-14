@@ -1,7 +1,7 @@
-import { eventName, eventSource } from '@events/customer-account-upgraded';
-
-import { CustomerAccountProps } from '@models/types';
-import { publishEvent } from '@repositories/publish-event-recipient';
+import { CustomerAccount } from '@domain/customer-account';
+import { CustomerAccountDto } from '@dto/customer-account';
+import { logger } from '@packages/logger';
+import { publishDomainEvents } from '@repositories/publish-event-recipient';
 import { retrieveCustomerAccount } from '@repositories/retrieve-customer-account-repository';
 import { updateCustomerAccount } from '@repositories/update-customer-account-repository';
 
@@ -11,7 +11,7 @@ import { updateCustomerAccount } from '@repositories/update-customer-account-rep
 /**
  * Upgrade an existing Customer Account
  * Input: Customer account ID
- * Output: CustomerAccountProps
+ * Output: CustomerAccountDto
  *
  * Primary course:
  *
@@ -21,15 +21,16 @@ import { updateCustomerAccount } from '@repositories/update-customer-account-rep
  */
 export async function upgradeCustomerAccountUseCase(
   id: string
-): Promise<CustomerAccountProps> {
-  const customerAccount = await retrieveCustomerAccount(id);
+): Promise<CustomerAccountDto> {
+  const customerAccount: CustomerAccount = await retrieveCustomerAccount(id);
 
   customerAccount.upgradeAccount();
 
   await updateCustomerAccount(customerAccount);
 
-  // we would typically validate the events: https://leejamesgilmore.medium.com/amazon-eventbridge-schema-validation-5b6c2c5ce3b3
-  await publishEvent(customerAccount, eventName, eventSource);
+  logger.info(`customer account ${id} upgraded`);
+
+  await publishDomainEvents(customerAccount.retrieveDomainEvents());
 
   return customerAccount.toDto();
 }

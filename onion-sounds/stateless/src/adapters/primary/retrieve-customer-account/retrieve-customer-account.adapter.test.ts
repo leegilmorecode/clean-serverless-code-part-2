@@ -1,16 +1,16 @@
 import * as retrieveCustomerAccountUseCase from '@use-cases/retrieve-customer-account/retrieve-customer-account';
 
 import {
-  CustomerAccountProps,
   PaymentStatus,
   SubscriptionType,
-} from '@models/types';
+} from '@models/customer-account-types';
 
 import { APIGatewayProxyEvent } from 'aws-lambda';
+import { CustomerAccountDto } from '@dto/customer-account';
 import { retrieveCustomerAccountAdapter } from '@adapters/primary/retrieve-customer-account/retrieve-customer-account.adapter';
 
 let event: Partial<APIGatewayProxyEvent>;
-let customerAccount: CustomerAccountProps;
+let customerAccount: CustomerAccountDto;
 
 describe('retrieve-customer-account-handler', () => {
   afterAll(() => {
@@ -26,6 +26,15 @@ describe('retrieve-customer-account-handler', () => {
       paymentStatus: PaymentStatus.Valid,
       created: 'created',
       updated: 'updated',
+      playlists: [],
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
 
     jest
@@ -41,11 +50,10 @@ describe('retrieve-customer-account-handler', () => {
 
   it('should return the correct response on success', async () => {
     // act & assert
-    await expect(
-retrieveCustomerAccountAdapter((event as any))).
-resolves.toMatchInlineSnapshot(`
+    await expect(retrieveCustomerAccountAdapter((event as any))).resolves.
+toMatchInlineSnapshot(`
 Object {
-  "body": "{\\"id\\":\\"111\\",\\"firstName\\":\\"Gilmore\\",\\"surname\\":\\"Lee\\",\\"subscriptionType\\":\\"Basic\\",\\"paymentStatus\\":\\"Valid\\",\\"created\\":\\"created\\",\\"updated\\":\\"updated\\"}",
+  "body": "{\\"id\\":\\"111\\",\\"firstName\\":\\"Gilmore\\",\\"surname\\":\\"Lee\\",\\"subscriptionType\\":\\"Basic\\",\\"paymentStatus\\":\\"Valid\\",\\"created\\":\\"created\\",\\"updated\\":\\"updated\\",\\"playlists\\":[],\\"customerAddress\\":{\\"addressLineOne\\":\\"line one\\",\\"addressLineTwo\\":\\"line two\\",\\"addressLineThree\\":\\"line three\\",\\"addressLineFour\\":\\"line four\\",\\"addressLineFive\\":\\"line five\\",\\"postCode\\":\\"ne11bb\\"}}",
   "statusCode": 200,
 }
 `);
@@ -56,9 +64,8 @@ Object {
     event = {} as any;
 
     // act & assert
-    await expect(
-retrieveCustomerAccountAdapter((event as any))).
-resolves.toMatchInlineSnapshot(`
+    await expect(retrieveCustomerAccountAdapter(event as any)).resolves
+      .toMatchInlineSnapshot(`
 Object {
   "body": "\\"no id in the path parameters of the event\\"",
   "statusCode": 400,

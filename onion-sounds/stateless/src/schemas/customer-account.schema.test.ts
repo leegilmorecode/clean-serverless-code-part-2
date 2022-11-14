@@ -1,20 +1,37 @@
-import {
-  PaymentStatus,
-  SubscriptionType,
-  UnmarshalledCustomerAccount,
-} from '../models';
+import { PaymentStatus, SubscriptionType } from '../models';
 
+import { CustomerAccountDto } from '@dto/customer-account';
+import { CustomerPlaylistDto } from '@dto/customer-playlist';
 import { schema } from './customer-account.schema';
 import { schemaValidator } from '../../../packages/schema-validator';
 
-let body: UnmarshalledCustomerAccount = {
+let playlists: CustomerPlaylistDto[] = [
+  {
+    created: '2022-01-01T00:00:00.000Z',
+    updated: '2022-01-01T00:00:00.000Z',
+    songIds: ['123', '234'],
+    id: 'a59e49ad-8f88-448f-8a15-41d560ad6d70',
+    playlistName: 'testplaylist',
+  },
+];
+
+let body: CustomerAccountDto = {
   id: 'f39e49ad-8f88-448f-8a15-41d560ad6d70',
   firstName: 'Lee',
   surname: 'Gilmore',
   paymentStatus: PaymentStatus.Valid,
   subscriptionType: SubscriptionType.Upgraded,
+  playlists,
   created: '2022-01-01T00:00:00.000Z',
   updated: '2022-01-01T00:00:00.000Z',
+  customerAddress: {
+    addressLineOne: 'line one',
+    addressLineTwo: 'line two',
+    addressLineThree: 'line three',
+    addressLineFour: 'line four',
+    addressLineFive: 'line five',
+    postCode: 'ne11bb',
+  },
 };
 
 describe('customer-account-schema', () => {
@@ -22,7 +39,7 @@ describe('customer-account-schema', () => {
     expect(() => schemaValidator(schema, body)).not.toThrow();
   });
 
-  it('should throw an error when there are more than 7 properties', () => {
+  it('should throw an error when there are more than 9 properties', () => {
     const badBody = {
       ...body,
       additionalProp: 'tree',
@@ -30,16 +47,16 @@ describe('customer-account-schema', () => {
     expect(() =>
       schemaValidator(schema, badBody)
     ).toThrowErrorMatchingInlineSnapshot(
-      `"[{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/maxProperties\\",\\"keyword\\":\\"maxProperties\\",\\"params\\":{\\"limit\\":7},\\"message\\":\\"must NOT have more than 7 properties\\"}]"`
+      `"[{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/maxProperties\\",\\"keyword\\":\\"maxProperties\\",\\"params\\":{\\"limit\\":9},\\"message\\":\\"must NOT have more than 9 properties\\"}]"`
     );
   });
 
-  it('should throw an error when there are less than 7 properties', () => {
+  it('should throw an error when there are less than 9 properties', () => {
     const badBody = {};
     expect(() =>
       schemaValidator(schema, badBody)
     ).toThrowErrorMatchingInlineSnapshot(
-      `"[{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/minProperties\\",\\"keyword\\":\\"minProperties\\",\\"params\\":{\\"limit\\":7},\\"message\\":\\"must NOT have fewer than 7 properties\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"id\\"},\\"message\\":\\"must have required property 'id'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"firstName\\"},\\"message\\":\\"must have required property 'firstName'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"surname\\"},\\"message\\":\\"must have required property 'surname'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"paymentStatus\\"},\\"message\\":\\"must have required property 'paymentStatus'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"subscriptionType\\"},\\"message\\":\\"must have required property 'subscriptionType'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"created\\"},\\"message\\":\\"must have required property 'created'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"updated\\"},\\"message\\":\\"must have required property 'updated'\\"}]"`
+      `"[{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/minProperties\\",\\"keyword\\":\\"minProperties\\",\\"params\\":{\\"limit\\":9},\\"message\\":\\"must NOT have fewer than 9 properties\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"id\\"},\\"message\\":\\"must have required property 'id'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"firstName\\"},\\"message\\":\\"must have required property 'firstName'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"surname\\"},\\"message\\":\\"must have required property 'surname'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"paymentStatus\\"},\\"message\\":\\"must have required property 'paymentStatus'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"subscriptionType\\"},\\"message\\":\\"must have required property 'subscriptionType'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"playlists\\"},\\"message\\":\\"must have required property 'playlists'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"created\\"},\\"message\\":\\"must have required property 'created'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"updated\\"},\\"message\\":\\"must have required property 'updated'\\"},{\\"instancePath\\":\\"\\",\\"schemaPath\\":\\"#/required\\",\\"keyword\\":\\"required\\",\\"params\\":{\\"missingProperty\\":\\"customerAddress\\"},\\"message\\":\\"must have required property 'customerAddress'\\"}]"`
     );
   });
 

@@ -1,5 +1,5 @@
 import { CustomerAccount } from '@domain/customer-account';
-import { CustomerAccountProps } from '@models/types';
+import { CustomerAccountDto } from '@dto/customer-account';
 import { createAccount } from '@adapters/secondary/database-adapter';
 
 // this is the repository which the domain calls to utilise the adapter
@@ -9,7 +9,7 @@ export async function createCustomerAccount(
   account: CustomerAccount
 ): Promise<CustomerAccount> {
   // use the adapter to call the database
-  const customerAccount: CustomerAccountProps = await createAccount(
+  const customerAccount: CustomerAccountDto = await createAccount(
     account.toDto()
   );
   return CustomerAccount.toDomain(customerAccount);

@@ -1,4 +1,6 @@
-import { CustomerAccountProps } from '@models/types';
+import { CustomerAccount } from '@domain/customer-account';
+import { CustomerAccountDto } from '@dto/customer-account';
+import { logger } from '@packages/logger';
 import { retrieveCustomerAccount } from '@repositories/retrieve-customer-account-repository';
 
 // takes a dto and calls the domain entities (returning a dto to the primary adapter)
@@ -7,7 +9,7 @@ import { retrieveCustomerAccount } from '@repositories/retrieve-customer-account
 /**
  * Retrueve a Customer Account
  * Input: Customer account ID
- * Output: CustomerAccountProps
+ * Output: CustomerAccountDto
  *
  * Primary course:
  *
@@ -15,8 +17,10 @@ import { retrieveCustomerAccount } from '@repositories/retrieve-customer-account
  */
 export async function retrieveCustomerAccountUseCase(
   id: string
-): Promise<CustomerAccountProps> {
-  const instance = await retrieveCustomerAccount(id);
+): Promise<CustomerAccountDto> {
+  const instance: CustomerAccount = await retrieveCustomerAccount(id);
+
+  logger.info(`retrieved customer account for ${id}`);
 
   return instance.toDto();
 }

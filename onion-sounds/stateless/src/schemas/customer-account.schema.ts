@@ -6,11 +6,13 @@ export const schema = {
     'surname',
     'paymentStatus',
     'subscriptionType',
+    'playlists',
     'created',
     'updated',
+    'customerAddress',
   ],
-  maxProperties: 7,
-  minProperties: 7,
+  maxProperties: 9,
+  minProperties: 9,
   properties: {
     id: {
       type: 'string',
@@ -36,6 +38,15 @@ export const schema = {
     },
     updated: {
       type: 'string',
+    },
+    playlists: {
+      type: 'array',
+      items: {
+        type: 'object',
+      },
+    },
+    customerAddress: {
+      type: 'object',
     },
   },
 };

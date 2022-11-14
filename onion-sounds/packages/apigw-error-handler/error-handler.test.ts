@@ -1,4 +1,8 @@
+import { MaxNumberOfPlaylistsError } from '@errors/max-number-of-playlists-error';
+import { MaxPlaylistSizeError } from '@errors/max-playlist-size-error';
 import { PaymentInvalidError } from '@errors/payment-invalid-error';
+import { PlaylistNotFoundError } from '@errors/playlist-not-found-error';
+import { SubscriptionAlreadyUpgradedError } from '@errors/subscription-already-upgraded-error';
 import { ValidationError } from '@errors/validation-error';
 import { errorHandler } from './error-handler';
 
@@ -49,7 +53,61 @@ Object {
     // act / assert
     expect(errorHandler(error)).toMatchInlineSnapshot(`
 Object {
-  "body": "\\"The payment is invalid\\"",
+  "body": "\\"this is a payment invalid error\\"",
+  "statusCode": 400,
+}
+`);
+  });
+
+  it('should return the correct response on PaymentInvalidError', () => {
+    // arrange
+    const error = new MaxNumberOfPlaylistsError('max number of playlists');
+
+    // act / assert
+    expect(errorHandler(error)).toMatchInlineSnapshot(`
+Object {
+  "body": "\\"max number of playlists\\"",
+  "statusCode": 400,
+}
+`);
+  });
+
+  it('should return the correct response on PaymentInvalidError', () => {
+    // arrange
+    const error = new MaxPlaylistSizeError('max playlist size');
+
+    // act / assert
+    expect(errorHandler(error)).toMatchInlineSnapshot(`
+Object {
+  "body": "\\"max playlist size\\"",
+  "statusCode": 400,
+}
+`);
+  });
+
+  it('should return the correct response on PlaylistNotFoundError', () => {
+    // arrange
+    const error = new PlaylistNotFoundError('playlist not found');
+
+    // act / assert
+    expect(errorHandler(error)).toMatchInlineSnapshot(`
+Object {
+  "body": "\\"playlist not found\\"",
+  "statusCode": 400,
+}
+`);
+  });
+
+  it('should return the correct response on SubscriptionAlreadyUpgradedError', () => {
+    // arrange
+    const error = new SubscriptionAlreadyUpgradedError(
+      'account already upgraded'
+    );
+
+    // act / assert
+    expect(errorHandler(error)).toMatchInlineSnapshot(`
+Object {
+  "body": "\\"account already upgraded\\"",
   "statusCode": 400,
 }
 `);

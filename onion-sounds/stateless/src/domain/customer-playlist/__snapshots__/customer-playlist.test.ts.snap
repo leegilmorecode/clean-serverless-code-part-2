@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`customer-playlist create playlist should create the new account successfully with a valid customerPlaylist 1`] = `
+CustomerPlaylist {
+  "_created": "2022-01-01T00:00:00.000Z",
+  "_domainEvents": Array [
+    Object {
+      "event": Object {
+        "created": "2022-01-01T00:00:00.000Z",
+        "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+        "playlistName": "testplaylist",
+        "songIds": Array [],
+        "updated": "2022-01-01T00:00:00.000Z",
+      },
+      "eventDateTime": "2022-01-01T00:00:00.000Z",
+      "eventName": "CustomerPlaylistCreated",
+      "eventVersion": "1",
+      "source": "com.customer-account-onion",
+    },
+  ],
+  "_id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+  "_updated": "2022-01-01T00:00:00.000Z",
+  "props": Object {
+    "created": "2022-01-01T00:00:00.000Z",
+    "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+    "playlistName": "testplaylist",
+    "songIds": Array [],
+    "updated": "2022-01-01T00:00:00.000Z",
+  },
+}
+`;
+
+exports[`customer-playlist toDomain should create a domain object based on a dto 1`] = `
+CustomerPlaylist {
+  "_created": "2022-01-01T00:00:00.000Z",
+  "_domainEvents": Array [],
+  "_id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+  "_updated": "2022-01-01T00:00:00.000Z",
+  "props": Object {
+    "created": "2022-01-01T00:00:00.000Z",
+    "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+    "playlistName": "testplaylist",
+    "songIds": Array [
+      "123",
+      "345",
+    ],
+    "updated": "2022-01-01T00:00:00.000Z",
+  },
+}
+`;
+
+exports[`customer-playlist toDto should create the correct dto 1`] = `
+Object {
+  "created": "2022-01-01T00:00:00.000Z",
+  "id": "f39e49ad-8f88-448f-8a15-41d560ad6d70",
+  "playlistName": "testplaylist",
+  "songIds": Array [],
+  "updated": "2022-01-01T00:00:00.000Z",
+}
+`;

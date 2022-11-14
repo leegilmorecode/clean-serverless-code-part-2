@@ -1,17 +1,20 @@
 import * as createCustomerAccountUseCase from '@use-cases/create-customer-account/create-customer-account';
 
 import {
-  CustomerAccountProps,
+  CustomerAccountDto,
+  NewCustomerAccountDto,
+} from '@dto/customer-account';
+import {
   NewCustomerAccountProps,
   PaymentStatus,
   SubscriptionType,
-} from '@models/types';
+} from '@models/customer-account-types';
 
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { createCustomerAccountAdapter } from '@adapters/primary/create-customer-account/create-customer-account.adapter';
 
 let event: Partial<APIGatewayProxyEvent>;
-let customerAccount: CustomerAccountProps;
+let customerAccount: CustomerAccountDto;
 
 describe('create-customer-account-handler', () => {
   afterAll(() => {
@@ -27,15 +30,32 @@ describe('create-customer-account-handler', () => {
       paymentStatus: PaymentStatus.Valid,
       created: 'created',
       updated: 'updated',
+      playlists: [],
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
 
     jest
       .spyOn(createCustomerAccountUseCase, 'createCustomerAccountUseCase')
       .mockResolvedValue(customerAccount);
 
-    const payload: NewCustomerAccountProps = {
+    const payload: NewCustomerAccountDto = {
       firstName: 'Lee',
       surname: 'Gilmore',
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
 
     event = {
@@ -45,10 +65,10 @@ describe('create-customer-account-handler', () => {
 
   it('should return the correct response on success', async () => {
     // act & assert
-    await expect(createCustomerAccountAdapter(event as any)).resolves
-      .toMatchInlineSnapshot(`
+    await expect(createCustomerAccountAdapter((event as any))).resolves.
+toMatchInlineSnapshot(`
 Object {
-  "body": "{\\"id\\":\\"111\\",\\"firstName\\":\\"Gilmore\\",\\"surname\\":\\"Lee\\",\\"subscriptionType\\":\\"Basic\\",\\"paymentStatus\\":\\"Valid\\",\\"created\\":\\"created\\",\\"updated\\":\\"updated\\"}",
+  "body": "{\\"id\\":\\"111\\",\\"firstName\\":\\"Gilmore\\",\\"surname\\":\\"Lee\\",\\"subscriptionType\\":\\"Basic\\",\\"paymentStatus\\":\\"Valid\\",\\"created\\":\\"created\\",\\"updated\\":\\"updated\\",\\"playlists\\":[],\\"customerAddress\\":{\\"addressLineOne\\":\\"line one\\",\\"addressLineTwo\\":\\"line two\\",\\"addressLineThree\\":\\"line three\\",\\"addressLineFour\\":\\"line four\\",\\"addressLineFive\\":\\"line five\\",\\"postCode\\":\\"ne11bb\\"}}",
   "statusCode": 201,
 }
 `);
@@ -59,6 +79,14 @@ Object {
     const payload: NewCustomerAccountProps = {
       firstName: '', // invalid
       surname: 'Gilmore',
+      customerAddress: {
+        addressLineOne: 'line one',
+        addressLineTwo: 'line two',
+        addressLineThree: 'line three',
+        addressLineFour: 'line four',
+        addressLineFive: 'line five',
+        postCode: 'ne11bb',
+      },
     };
 
     event = {
@@ -66,8 +94,8 @@ Object {
     };
 
     // act & assert
-    await expect(createCustomerAccountAdapter(event as any)).resolves
-      .toMatchInlineSnapshot(`
+    await expect(createCustomerAccountAdapter((event as any))).resolves.
+toMatchInlineSnapshot(`
 Object {
   "body": "\\"[{\\\\\\"instancePath\\\\\\":\\\\\\"/firstName\\\\\\",\\\\\\"schemaPath\\\\\\":\\\\\\"#/properties/firstName/pattern\\\\\\",\\\\\\"keyword\\\\\\":\\\\\\"pattern\\\\\\",\\\\\\"params\\\\\\":{\\\\\\"pattern\\\\\\":\\\\\\"^[a-zA-Z]+$\\\\\\"},\\\\\\"message\\\\\\":\\\\\\"must match pattern \\\\\\\\\\\\\\"^[a-zA-Z]+$\\\\\\\\\\\\\\"\\\\\\"}]\\"",
   "statusCode": 400,

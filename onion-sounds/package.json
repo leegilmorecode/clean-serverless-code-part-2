@@ -5,6 +5,7 @@
     "onion-sounds": "bin/onion-sounds.js"
   },
   "scripts": {
+    "predocs": "npx cdk-dia && mv diagram.png ../docs/images/diagram.png && rm diagram.dot",
     "docs": "npx typedoc",
     "test": "jest --maxWorkers=50% --noStackTrace --silent",
     "test:coverage": "jest --maxWorkers=50% --coverage --silent",
@@ -29,6 +30,7 @@
     "@types/prettier": "2.6.0",
     "@types/uuid": "^8.3.4",
     "aws-cdk": "2.47.0",
+    "cdk-dia": "^0.7.0",
     "esbuild": "^0.15.12",
     "jest": "^27.5.1",
     "ts-jest": "^27.1.4",
@@ -36,6 +38,10 @@
     "typescript": "~3.9.7"
   },
   "dependencies": {
+    "@aws-lambda-powertools/logger": "^1.4.1",
+    "@aws-lambda-powertools/metrics": "^1.4.1",
+    "@aws-lambda-powertools/tracer": "^1.4.1",
+    "@middy/core": "^3.6.2",
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",
     "aws-cdk-lib": "2.47.0",

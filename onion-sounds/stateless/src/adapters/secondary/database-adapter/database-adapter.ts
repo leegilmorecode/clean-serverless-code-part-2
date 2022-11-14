@@ -1,7 +1,8 @@
 import * as AWS from 'aws-sdk';
 
-import { CustomerAccountProps } from '@models/types';
+import { CustomerAccountDto } from '@dto/customer-account';
 import { config } from '@config/config';
+import { logger } from '@packages/logger';
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -11,14 +12,17 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 // domain --> use case --> (adapter)
 export async function createAccount(
-  customerAccount: CustomerAccountProps
-): Promise<CustomerAccountProps> {
+  customerAccount: CustomerAccountDto
+): Promise<CustomerAccountDto> {
+  const tableName = config.get('tableName');
+
   const params: AWS.DynamoDB.DocumentClient.PutItemInput = {
-    TableName: config.get('tableName'),
+    TableName: tableName,
     Item: customerAccount,
   };
 
   await dynamoDb.put(params).promise();
+  logger.info(`Customer account ${customerAccount.id} stored in ${tableName}`);
 
   return customerAccount;
 }
@@ -26,24 +30,28 @@ export async function createAccount(
 // this is the secondary adapter which updates the account in the db
 // domain --> use case --> (adapter)
 export async function updateAccount(
-  customerAccount: CustomerAccountProps
-): Promise<CustomerAccountProps> {
+  customerAccount: CustomerAccountDto
+): Promise<CustomerAccountDto> {
+  const tableName = config.get('tableName');
+
   const params: AWS.DynamoDB.DocumentClient.PutItemInput = {
-    TableName: config.get('tableName'),
+    TableName: tableName,
     Item: customerAccount,
   };
 
   await dynamoDb.put(params).promise();
+  logger.info(`Customer account ${customerAccount.id} updated in ${tableName}`);
+
   return customerAccount;
 }
 
 // this is the secondary adapter which retrieves the account from the db
 // domain --> use case via port --> (adapter)
-export async function retrieveAccount(
-  id: string
-): Promise<CustomerAccountProps> {
+export async function retrieveAccount(id: string): Promise<CustomerAccountDto> {
+  const tableName = config.get('tableName');
+
   const params: AWS.DynamoDB.DocumentClient.GetItemInput = {
-    TableName: config.get('tableName'),
+    TableName: tableName,
     Key: {
       id,
     },
@@ -51,9 +59,11 @@ export async function retrieveAccount(
 
   const { Item: item } = await dynamoDb.get(params).promise();
 
-  const customer: CustomerAccountProps = {
-    ...(item as CustomerAccountProps),
+  const customer: CustomerAccountDto = {
+    ...(item as CustomerAccountDto),
   };
+
+  logger.info(`Customer account ${customer.id} retrieved from ${tableName}`);
 
   return customer;
 }
